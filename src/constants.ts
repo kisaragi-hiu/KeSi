@@ -111,3 +111,5 @@ const NGOO_SIU_LE = {
   "9": "^",
   "10": "㆐",
 };
+
+export const compositionChars = new Set("⿰⿱⿲⿳⿴⿵⿶⿷⿸⿹⿺⿻⿿");

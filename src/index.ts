@@ -2,6 +2,7 @@ import {
   charConnectionMark,
   lightToneMark,
   // sentencePunctuation,
+  compositionChars,
 } from "./constants";
 
 function normalizeTaibun(text: string) {
@@ -177,6 +178,142 @@ class Word {
   TL = this.KIP;
 }
 
+class AnalysisState {
+  composeLength: number = 0;
+  mode: "normal" | "compose" = "normal";
+  wordArray;
+  lightToneArray;
+  notSameWordAsNextChar;
+  thisWord: string;
+  thisCharIsLightTone;
+  thisWordIsLightToneWord;
+  thisWordIsLightToneWordAndPartOfLightToneWord;
+  constructor() {
+    this.wordArray = [];
+    this.lightToneArray = [];
+    this.notSameWordAsNextChar = [];
+    this.toNormalMode();
+    // 組字式抑是數羅會超過一个字元
+    this.thisWord = "";
+    this.thisCharIsLightTone = false;
+    this.thisWordIsLightToneWord = false;
+    this.thisWordIsLightToneWordAndPartOfLightToneWord = false;
+  }
+  analysisResult() {
+    return [this.wordArray, this.lightToneArray, this.notSameWordAsNextChar];
+  }
+  hasAnalysisData() {
+    return this.wordArray.length > 0 || this.thisWordHasMoreObjects();
+  }
+  thisWordHasMoreObjects() {
+    return this.thisWord !== "";
+  }
+  thisWordIsDigit() {
+    return !!this.thisWord.match(/^[0-9]+$/);
+  }
+  toNormalMode() {
+    this.mode = "normal";
+    this.composeLength = 0;
+  }
+  toComposeMode() {
+    this.mode = "compose";
+    this.composeLength = -1;
+  }
+  isNormalMode() {
+    this.mode === "normal";
+  }
+  isComposeMode() {
+    this.mode === "compose";
+  }
+  composeModelAppendChar(char: string) {
+    if (compositionChars.has(char)) {
+      this.composeLength--;
+    } else {
+      this.composeLength++;
+    }
+  }
+  composeLengthEnough() {
+    return this.composeLength === 1;
+  }
+  thisWordAppendChar(char: string) {
+    this.thisWord += char;
+  }
+  lastEndsWithO() {
+    for (const o of ["o", "ó", "ò", "ô", "ǒ", "ō", "o̍", "ő"]) {
+      if (this.thisWord.endsWith(o)) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
+// _bun_tsuan_sutin
+function textToWordArray(textArray: string[], lightToneArray: string[]) {
+  const wordArray = [];
+  for (let i = 0; i < textArray.length; i++) {
+    const wordStr = textArray[i];
+    const lightTone = lightToneArray[i];
+    const word = new Word();
+    for (let j = 0; j < wordStr.length; j++) {
+      word.push(new Char(wordStr[i], undefined, lightTone[i]));
+    }
+    wordArray.push(word);
+  }
+  return wordArray;
+}
+
+// _hunsik_tngji_tngsu
+function analysisSplitCharSplitWords(text: string) {
+  const isWhiteSpace = /^[^\S\n]+$/;
+  const state = new AnalysisState();
+  if (text.match(isWhiteSpace)) {
+    return state.analysisResult();
+  }
+  let prevChar = undefined;
+  let prevIsConnectionMark = false;
+  let prevIsWhiteSpace = false;
+  let prevIsLightToneMark = false;
+  let prevIsBopomofo = false;
+  let pos = 0;
+  while (pos < text.length) {
+    const char = text[pos];
+    let thisIsConnectionMark = false;
+    let thisIsWhiteSpace = false;
+    let thisIsLightToneMark = false;
+    let thisIsBopomofo = isBopomofo(char);
+    if (state.mode === "compose") {
+      state.thisWordAppendChar(char);
+      state.composeModelAppendChar(char);
+      if (state.composeLengthEnough()) {
+        state.thisWordFlush();
+        state.toNormalMode();
+      }
+    } else if (state.mode === "normal") {
+    }
+  }
+}
+
+function splitWords(charArray: any[], lightToneArray, notSameWordAsNextChar) {
+  const nestedWordArray = [];
+  const nestedLightToneArray = [];
+  let pos = 0;
+  while (pos < charArray.length) {
+    let end = pos;
+    while (
+      end < notSameWordAsNextChar.length &&
+      !notSameWordAsNextChar.at(end)
+    ) {
+      end++;
+    }
+    end++;
+    nestedWordArray.push(charArray.slice(pos, end));
+    nestedLightToneArray.push(lightToneArray.slice(pos, end));
+    pos = end;
+  }
+  return [nestedWordArray, nestedLightToneArray];
+}
+
 class Sentence {
   words: Word[];
   constructor(hanlo?: string, lomaji?: string) {
@@ -195,8 +332,8 @@ class Sentence {
     } else if (lomaji === undefined) {
       const [tngji, tngji_khinsiann, si_bokangsu] =
         this._hunsik_tngji_tngsu(hanlo);
-      const [bun, khinsiann] = this._tngsu(tngji, tngji_khinsiann, si_bokangsu);
-      this.words = this._bun_tsuan_sutin(bun, khinsiann);
+      const [bun, khinsiann] = splitWords(tngji, tngji_khinsiann, si_bokangsu);
+      this.words = textToWordArray(bun, khinsiann);
     } else {
       // 以羅馬字ê斷字斷詞為主，漢羅文--ê無效
       const [tnghanlo, _ps, _ps] = this._hunsik_tngji_tngsu(hanlo);
