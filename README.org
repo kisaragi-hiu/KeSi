@@ -10,14 +10,19 @@ Conversion between traditional POJ and Ministry of Education's spelling reform (
 
 This is / will be a port of [[https://github.com/i3thuan5/KeSi][i3thuan5/KeSi]].
 
-** Progress [2/10]
+** Progress [26%]
 :PROPERTIES:
 :COOKIE_DATA: recursive
 :END:
 
 - [-] butkian
   - [X] ji.py (char)
-  - [ ] kongiong.py (common)
+  - [-] kongiong.py (common)
+    - [X] normalize_taibun
+    - [X] normalize_kautian
+    - [ ] 敢是注音符號
+    - [ ] 敢是拼音字元
+    - [ ] si_lomaji
   - [ ] ku.py (sentence)
   - [X] su.py (word)
 - [ ] susia
