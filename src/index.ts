@@ -1,5 +1,27 @@
-const charConnectionMark = "-";
-const lightToneMark = "--";
+import {
+  charConnectionMark,
+  lightToneMark,
+  // sentencePunctuation,
+} from "./constants";
+
+function normalizeTaibun(text: string) {
+  return (
+    text
+      // Non-printable characters to spaces
+      .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f]/g, " ")
+      // Apply MOE private characters that have since gotten Unicode encodings
+      .replaceAll("\uE701", "\u{0002A736}")
+      .replaceAll("\uF5E9", "\u{0002B74F}")
+      .replaceAll("\uE35C", "\u{0002B75B}")
+      .replaceAll("\uF5EA", "\u{0002B77A}")
+      .replaceAll("\uF5EE", "\u{0002B77B}")
+      .replaceAll("\uE703", "\u{0002B7BC}")
+      .replaceAll("\uF5EF", "\u{0002B7C2}")
+      .replaceAll("\uE705", "\u{0002C9B0}")
+      .replaceAll("\uF5E7", "\u{000308FB}")
+      .normalize("NFC")
+  );
+}
 
 /**
  * Remove POJ/TL light tone from `text`, but only when `doIt` is truthy.
@@ -153,4 +175,50 @@ class Word {
     return newWord;
   }
   TL = this.KIP;
+}
+
+class Sentence {
+  words: Word[];
+  constructor(hanlo?: string, lomaji?: string) {
+    if (hanlo !== undefined) {
+      hanlo = normalizeTaibun(hanlo);
+    }
+    if (lomaji !== undefined) {
+      lomaji = normalizeTaibun(lomaji);
+    }
+    if (hanlo === undefined) {
+      hanlo = lomaji;
+      lomaji = undefined;
+    }
+    if (hanlo === undefined) {
+      this.words = [];
+    } else if (lomaji === undefined) {
+      const [tngji, tngji_khinsiann, si_bokangsu] =
+        this._hunsik_tngji_tngsu(hanlo);
+      const [bun, khinsiann] = this._tngsu(tngji, tngji_khinsiann, si_bokangsu);
+      this.words = this._bun_tsuan_sutin(bun, khinsiann);
+    } else {
+      // 以羅馬字ê斷字斷詞為主，漢羅文--ê無效
+      const [tnghanlo, _ps, _ps] = this._hunsik_tngji_tngsu(hanlo);
+      const [tnglomaji, tngji_khinsiann, si_bokangsu] =
+        this._hunsik_tngji_tngsu(lomaji);
+
+      if (tnghanlo.length !== tnglomaji.length) {
+        throw new TuiBeTse(
+          `Kù bô pênn tn̂g: Hanlo tn̂g ${tnghanlo.length} jī, m̄-koh lomaji tn̂g ${tnglomaji.length} jī`
+        );
+      }
+      let [hanlo_tin, _ps] = this._tngsu(
+        tnghanlo,
+        tngji_khinsiann,
+        si_bokangsu
+      );
+      let [lomaji_tin, khinsiann] = this._tngsu(
+        tnglomaji,
+        tngji_khinsiann,
+        si_bokangsu
+      );
+      this.words = this._phe_tsuan_sutin(hanlo_tin, lomaji_tin, khinsiann);
+    }
+  }
 }
