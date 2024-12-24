@@ -1,0 +1,27 @@
+* KeSi
+
+Yet another attempt at porting KeSi to JavaScript and possibly simplifying it.
+
+** Goals
+
+Conversion between traditional POJ and Ministry of Education's spelling reform (TL or “KIP”).
+
+** Thanks
+
+This is / will be a port of [[https://github.com/i3thuan5/KeSi][i3thuan5/KeSi]].
+
+** Progress [1/10]
+:PROPERTIES:
+:COOKIE_DATA: recursive
+:END:
+
+- [-] butkian
+  - [ ] ji.py (char)
+  - [ ] kongiong.py (common)
+  - [ ] ku.py (sentence)
+  - [X] su.py (word)
+- [ ] susia
+  - [ ] POJ.py
+  - [ ] TL.py
+  - [ ] kongke.py (common)
+  - [ ] pio.py (tables)
