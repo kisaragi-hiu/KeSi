@@ -5,7 +5,7 @@ import {
   compositionChars,
 } from "./constants";
 
-function normalizeTaibun(text: string) {
+export function normalizeTaibun(text: string) {
   return (
     text
       // Non-printable characters to spaces
@@ -39,7 +39,7 @@ function addLightTone(doIt: boolean, text: string) {
   return doIt ? lightToneMark + text : text;
 }
 
-class Char {
+export class Char {
   hanlo: string;
   lomaji: string;
   // KeSi implements this as a check on whether hanlo starts with the light tone
@@ -76,7 +76,7 @@ class Char {
   TL = this.KIP;
 }
 
-class Word {
+export class Word {
   characters: Char[];
   constructor() {
     this.characters = [];
@@ -245,117 +245,5 @@ class AnalysisState {
       }
     }
     return false;
-  }
-}
-
-// _bun_tsuan_sutin
-function textToWordArray(textArray: string[], lightToneArray: string[]) {
-  const wordArray = [];
-  for (let i = 0; i < textArray.length; i++) {
-    const wordStr = textArray[i];
-    const lightTone = lightToneArray[i];
-    const word = new Word();
-    for (let j = 0; j < wordStr.length; j++) {
-      word.push(new Char(wordStr[i], undefined, lightTone[i]));
-    }
-    wordArray.push(word);
-  }
-  return wordArray;
-}
-
-// _hunsik_tngji_tngsu
-function analysisSplitCharSplitWords(text: string) {
-  const isWhiteSpace = /^[^\S\n]+$/;
-  const state = new AnalysisState();
-  if (text.match(isWhiteSpace)) {
-    return state.analysisResult();
-  }
-  let prevChar = undefined;
-  let prevIsConnectionMark = false;
-  let prevIsWhiteSpace = false;
-  let prevIsLightToneMark = false;
-  let prevIsBopomofo = false;
-  let pos = 0;
-  while (pos < text.length) {
-    const char = text[pos];
-    let thisIsConnectionMark = false;
-    let thisIsWhiteSpace = false;
-    let thisIsLightToneMark = false;
-    let thisIsBopomofo = isBopomofo(char);
-    if (state.mode === "compose") {
-      state.thisWordAppendChar(char);
-      state.composeModelAppendChar(char);
-      if (state.composeLengthEnough()) {
-        state.thisWordFlush();
-        state.toNormalMode();
-      }
-    } else if (state.mode === "normal") {
-    }
-  }
-}
-
-function splitWords(charArray: any[], lightToneArray, notSameWordAsNextChar) {
-  const nestedWordArray = [];
-  const nestedLightToneArray = [];
-  let pos = 0;
-  while (pos < charArray.length) {
-    let end = pos;
-    while (
-      end < notSameWordAsNextChar.length &&
-      !notSameWordAsNextChar.at(end)
-    ) {
-      end++;
-    }
-    end++;
-    nestedWordArray.push(charArray.slice(pos, end));
-    nestedLightToneArray.push(lightToneArray.slice(pos, end));
-    pos = end;
-  }
-  return [nestedWordArray, nestedLightToneArray];
-}
-
-class Sentence {
-  words: Word[];
-  constructor(hanlo?: string, lomaji?: string) {
-    if (hanlo !== undefined) {
-      hanlo = normalizeTaibun(hanlo);
-    }
-    if (lomaji !== undefined) {
-      lomaji = normalizeTaibun(lomaji);
-    }
-    if (hanlo === undefined) {
-      hanlo = lomaji;
-      lomaji = undefined;
-    }
-    if (hanlo === undefined) {
-      this.words = [];
-    } else if (lomaji === undefined) {
-      const [tngji, tngji_khinsiann, si_bokangsu] =
-        this._hunsik_tngji_tngsu(hanlo);
-      const [bun, khinsiann] = splitWords(tngji, tngji_khinsiann, si_bokangsu);
-      this.words = textToWordArray(bun, khinsiann);
-    } else {
-      // 以羅馬字ê斷字斷詞為主，漢羅文--ê無效
-      const [tnghanlo, _ps, _ps] = this._hunsik_tngji_tngsu(hanlo);
-      const [tnglomaji, tngji_khinsiann, si_bokangsu] =
-        this._hunsik_tngji_tngsu(lomaji);
-
-      if (tnghanlo.length !== tnglomaji.length) {
-        throw new TuiBeTse(
-          `Kù bô pênn tn̂g: Hanlo tn̂g ${tnghanlo.length} jī, m̄-koh lomaji tn̂g ${tnglomaji.length} jī`
-        );
-      }
-      let [hanlo_tin, _ps] = this._tngsu(
-        tnghanlo,
-        tngji_khinsiann,
-        si_bokangsu
-      );
-      let [lomaji_tin, khinsiann] = this._tngsu(
-        tnglomaji,
-        tngji_khinsiann,
-        si_bokangsu
-      );
-      this.words = this._phe_tsuan_sutin(hanlo_tin, lomaji_tin, khinsiann);
-    }
   }
 }

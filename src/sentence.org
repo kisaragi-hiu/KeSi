@@ -1,0 +1,43 @@
+#+title: sentence
+
+- [ ] Ku (class) *class definition*
+- [X] Ku (class) __init__ (def)
+- [ ] Ku (class) __str__ (def)
+- [ ] Ku (class) __iter__ (def)
+- [ ] Ku (class) __getitem__ (def)
+- [ ] Ku (class) __len__ (def)
+- [ ] Ku (class) __eq__ (def)
+- [ ] Ku (class) _bun_tsuan_sutin (def) :: textToWordArray
+- [ ] Ku (class) _phe_tsuan_sutin (def) :: pheToWordArray
+- [ ] Ku (class) hanlo (def)
+- [ ] Ku (class) lomaji (def)
+- [ ] Ku (class) kiphanlo (def)
+- [ ] Ku (class) thianji (def)
+- [ ] Ku (class) thiam (def)
+- [ ] Ku (class) POJ (def)
+- [ ] Ku (class) TL (def)
+- [ ] Ku (class) _tngsu (def) :: splitWords
+- [ ] Ku (class) _hunsik_tngji_tngsu (def) :: analysisSplitCharSplitWords
+- [ ] Ku (class)/_分析狀態 (class) *class definition*
+- [ ] Ku (class)/_分析狀態 (class) __init__ (def)
+- [ ] Ku (class)/_分析狀態 (class) 分析結果 (def)
+- [ ] Ku (class)/_分析狀態 (class) 敢有分析資料矣 (def)
+- [ ] Ku (class)/_分析狀態 (class) 這馬字敢閣有物件 (def)
+- [ ] Ku (class)/_分析狀態 (class) 這馬字敢全部攏數字 (def)
+- [ ] Ku (class)/_分析狀態 (class) 變一般模式 (def)
+- [ ] Ku (class)/_分析狀態 (class) 變組字模式 (def)
+- [ ] Ku (class)/_分析狀態 (class) 是一般模式 (def)
+- [ ] Ku (class)/_分析狀態 (class) 是組字模式 (def)
+- [ ] Ku (class)/_分析狀態 (class) 組字模型加一个字元 (def)
+- [ ] Ku (class)/_分析狀態 (class) 組字長度有夠矣未 (def)
+- [ ] Ku (class)/_分析狀態 (class) 這馬字加一个字元 (def)
+- [ ] Ku (class)/_分析狀態 (class) 這馬是輕聲字 (def)
+- [ ] Ku (class)/_分析狀態 (class) 這陣是輕聲詞 (def)
+- [ ] Ku (class)/_分析狀態 (class) 有連字符 (def)
+- [ ] Ku (class)/_分析狀態 (class) 字陣列直接加一字 (def)
+- [ ] Ku (class)/_分析狀態 (class) 這馬字好矣清掉囥入去字陣列 (def)
+- [ ] Ku (class)/_分析狀態 (class) 頂一字佮這馬的字仝詞 (def)
+- [ ] Ku (class)/_分析狀態 (class) 頂一字佮這馬的字無仝詞 (def)
+- [ ] Ku (class)/_分析狀態 (class) 上尾敢是o結尾 (def)
+- [ ] 解析錯誤 (class)
+- [ ] TuiBeTse (class)
