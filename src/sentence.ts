@@ -44,7 +44,11 @@ function analysisSplitCharSplitWords(text: string) {
 }
 
 // _tngsu
-function splitWords(charArray: any[], lightToneArray, notSameWordAsNextChar) {
+function splitWords(
+  charArray: string[],
+  lightToneArray: boolean[],
+  notSameWordAsNextChar: boolean[]
+) {
   const nestedWordArray = [];
   const nestedLightToneArray = [];
   let pos = 0;
@@ -61,15 +65,15 @@ function splitWords(charArray: any[], lightToneArray, notSameWordAsNextChar) {
     nestedLightToneArray.push(lightToneArray.slice(pos, end));
     pos = end;
   }
-  return [nestedWordArray, nestedLightToneArray];
+  return [nestedWordArray, nestedLightToneArray] as [string[][], boolean[][]];
 }
 
 // _bun_tsuan_sutin
-function textToWordArray(textArray: string[], lightToneArray: string[]) {
+function textToWordArray(textDict: string[][], lightToneDict: boolean[][]) {
   const wordArray = [];
-  for (let i = 0; i < textArray.length; i++) {
-    const wordStr = textArray[i];
-    const lightTone = lightToneArray[i];
+  for (let i = 0; i < textDict.length; i++) {
+    const wordStr = textDict[i];
+    const lightTone = lightToneDict[i];
     const word = new Word();
     for (let j = 0; j < wordStr.length; j++) {
       word.push(new Char(wordStr[i], undefined, lightTone[i]));
@@ -81,21 +85,22 @@ function textToWordArray(textArray: string[], lightToneArray: string[]) {
 
 // _phe_tsuan_sutin
 function pheToTextArray(
-  hanloArray: string[],
-  lomajiArray: string[],
-  lightToneArray: string[]
+  hanloDict: string[][],
+  lomajiDict: string[][],
+  lightToneDict: boolean[][]
 ) {
-  const wordArray = [];
-  for (let i = 0; i < hanloArray.length; i++) {
+  const wordArray: Word[] = [];
+  for (let i = 0; i < hanloDict.length; i++) {
     const word = new Word();
-    const suhanlo_tin = hanloArray[i];
-    const sulomaji_tin = lomajiArray[i];
-    const khinsiann_tin = lightToneArray[i];
-    for (let j = 0; j < wordStr.length; j++) {
-      word.push(new Char(wordStr[i], undefined, lightTone[i]));
+    const hanloArray = hanloDict[i];
+    const lomajiArray = lomajiDict[i];
+    const lightToneArray = lightToneDict[i];
+    for (let j = 0; j < hanloArray.length; j++) {
+      word.push(new Char(hanloArray[j], lomajiArray[j], lightToneArray[j]));
     }
     wordArray.push(word);
   }
+  return wordArray;
 }
 
 class Sentence {
@@ -121,7 +126,7 @@ class Sentence {
       this.words = textToWordArray(bun, khinsiann);
     } else {
       // 以羅馬字ê斷字斷詞為主，漢羅文--ê無效
-      const [tnghanlo, _ps, _ps] = analysisSplitCharSplitWords(hanlo);
+      const [tnghanlo] = analysisSplitCharSplitWords(hanlo);
       const [tnglomaji, tngji_khinsiann, si_bokangsu] =
         analysisSplitCharSplitWords(lomaji);
 
@@ -131,14 +136,14 @@ class Sentence {
         );
       }
 
-      let [hanlo_tin, _ps] = splitWords(tnghanlo, tngji_khinsiann, si_bokangsu);
+      let [hanlo_tin] = splitWords(tnghanlo, tngji_khinsiann, si_bokangsu);
       let [lomaji_tin, khinsiann] = splitWords(
         tnglomaji,
         tngji_khinsiann,
         si_bokangsu
       );
 
-      this.words = this._phe_tsuan_sutin(hanlo_tin, lomaji_tin, khinsiann);
+      this.words = pheToTextArray(hanlo_tin, lomaji_tin, khinsiann);
     }
   }
 }
