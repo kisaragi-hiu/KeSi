@@ -16,13 +16,14 @@ class Ku:
         for ji in su:
             for guan in ji.hanlo:
     """
+
     _切組物件分詞 = re.compile('(([^ ｜]*[^ ]｜[^ ][^ ｜]*) ?|[^ ]+)')
     _是空白 = re.compile(r'[^\S\n]+')
     _是分字符號 = re.compile('{}+'.format(LIAN_JI_HU))
     _是數字 = set('0123456789')
     _是多字元標點 = re.compile(r'(\.\.\.)|(……)|(──)')
 
-    def __init__(self, hanlo=None, lomaji=None):
+    def __init__(self, hanlo: str | None = None, lomaji: str | None = None):
         if hanlo is not None:
             hanlo = normalize_taibun(hanlo)
         if lomaji is not None:
@@ -77,8 +78,8 @@ class Ku:
     def __eq__(self, other):
         return self._su == other._su
 
-    def _bun_tsuan_sutin(self, bun_tin, khinsiann_tin):
-        sutin = []
+    def _bun_tsuan_sutin(self, bun_tin: list[list[str]], khinsiann_tin: list[list[bool]]):
+        sutin: list[Su] = []
         for tsitsu, khinsiann in zip(bun_tin, khinsiann_tin):
             su = Su()
             for ji, si_khinsiann in zip(tsitsu, khinsiann):
@@ -88,8 +89,8 @@ class Ku:
             sutin.append(su)
         return sutin
 
-    def _phe_tsuan_sutin(self, hanlo_tin, lomaji_tin, khinsiann_tin):
-        sutin = []
+    def _phe_tsuan_sutin(self, hanlo_tin: list[list[str]], lomaji_tin: list[list[str]], khinsiann_tin: list[list[bool]]):
+        sutin: list[Su] = []
         for suhanlo_tin, sulomaji_tin, khinsiann in zip(
                 hanlo_tin, lomaji_tin, khinsiann_tin):
             su = Su()
@@ -108,7 +109,7 @@ class Ku:
           會 kā 文本標準化：
           保留羅馬字 ê 空白，tshun--ê 空白會刣掉
         """
-        bun = []
+        bun: list[str] = []
         頂一詞上尾是羅馬字 = False
         for su in self:
             suhanlo = su.hanlo
@@ -130,7 +131,7 @@ class Ku:
           會 kā 文本標準化：
           保留羅馬字 ê 空白，tshun--ê 空白會刣掉
         """
-        bun = []
+        bun: list[str] = []
         頂一詞上尾是羅馬字 = False
         for su in self:
             sulomaji = su.lomaji
@@ -152,7 +153,7 @@ class Ku:
           會 kā 文本標準化：
           保留羅馬字 ê 空白，tshun--ê 空白會刣掉
         """
-        bun = []
+        bun: list[str] = []
         頂一詞上尾是羅馬字 = False
         for su in self:
             suhanlo = su.kiphanlo
@@ -175,7 +176,7 @@ class Ku:
         for tsit_su in self:
             yield from tsit_su
 
-    def thiam(self, su):
+    def thiam(self, su: Su):
         self._su.append(su)
 
     def POJ(self):
@@ -192,9 +193,9 @@ class Ku:
 
     KIP = TL
 
-    def _tngsu(self, 字陣列, 輕聲陣列, 佮後一个字無仝一个詞):
-        巢狀詞陣列 = []
-        巢狀輕聲陣列 = []
+    def _tngsu(self, 字陣列: list[str], 輕聲陣列: list[bool], 佮後一个字無仝一个詞: list[bool | None]):
+        巢狀詞陣列: list[list[str]] = []
+        巢狀輕聲陣列: list[list[bool]] = []
         位置 = 0
         while 位置 < len(字陣列):
             範圍 = 位置
@@ -206,11 +207,11 @@ class Ku:
             位置 = 範圍
         return 巢狀詞陣列, 巢狀輕聲陣列
 
-    def _hunsik_tngji_tngsu(self, 語句):
+    def _hunsik_tngji_tngsu(self, 語句: str):
         狀態 = self._分析狀態()
         if self._是空白.fullmatch(語句):
             return 狀態.分析結果()
-        頂一个字 = None
+        頂一个字: str | None = None
         頂一个是連字符 = False
         頂一个是空白 = False
         頂一个是輕聲符號 = False
@@ -363,6 +364,9 @@ class Ku:
         return 狀態.分析結果()
 
     class _分析狀態:
+        _字陣列: list[str]
+        _輕聲陣列: list[bool]
+        _佮後一个字無仝一个詞: list[bool | None]
 
         def __init__(self):
             self._字陣列 = []
@@ -401,7 +405,7 @@ class Ku:
         def 是組字模式(self):
             return self._模式 == '組字'
 
-        def 組字模型加一个字元(self, 字):
+        def 組字模型加一个字元(self, 字: str):
             if 字 in 組字式符號:
                 self._組字長度 -= 1
             else:
@@ -410,7 +414,7 @@ class Ku:
         def 組字長度有夠矣未(self):
             return self._組字長度 == 1
 
-        def 這馬字加一个字元(self, 字):
+        def 這馬字加一个字元(self, 字: str):
             self._這馬字 += 字
 
         def 這馬是輕聲字(self):
@@ -424,7 +428,7 @@ class Ku:
             if self._這陣是輕聲詞:
                 self._這陣是輕聲詞_而且是輕聲詞ê一部份 = True
 
-        def 字陣列直接加一字(self, 字):
+        def 字陣列直接加一字(self, 字: str):
             self._字陣列.append(字)
             self._輕聲陣列.append(False)
             self._佮後一个字無仝一个詞.append(None)

@@ -6,8 +6,7 @@ from kesi.butkian.kongiong import si_lomaji
 
 
 class Ji:
-
-    def __init__(self, hanlo, lomaji=None, si_khinsiann=False):
+    def __init__(self, hanlo: str, lomaji: str | None = None, si_khinsiann: bool = False):
         if si_khinsiann:
             self.hanlo = '--{}'.format(hanlo)
         else:

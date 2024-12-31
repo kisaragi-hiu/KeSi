@@ -1,0 +1,4 @@
+{
+  "include": ["kesi"],
+  "typeCheckingMode": "strict"
+}

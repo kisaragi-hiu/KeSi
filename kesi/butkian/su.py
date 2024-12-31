@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from kesi.butkian.kongiong import LIAN_JI_HU, si_lomaji
 from kesi.butkian.kongiong import KHIN_SIANN_HU
+from kesi.butkian.ji import Ji
 
 
 class Su:
+    _ji: list[Ji]
 
     def __init__(self):
         self._ji = []
@@ -28,7 +30,7 @@ class Su:
           L, L -> 'L-L'
           L, --L -> 'L--L'
         """
-        buntin = []
+        buntin: list[str] = []
         ting_ji_si_lomaji = False
         su_u_khinsiann = False
 
@@ -58,7 +60,7 @@ class Su:
           L, L -> 'L-L'
           L, --L -> 'L--L'
         """
-        buntin = []
+        buntin: list[str] = []
         ting_ji_si_lomaji = False
         su_u_khinsiann = False
 
@@ -88,7 +90,7 @@ class Su:
           L, L -> 'L-L'
           L, --L -> 'L--L'
         """
-        buntin = []
+        buntin: list[str] = []
         ting_ji_si_lomaji = False
 
         for ji in self:
@@ -103,7 +105,7 @@ class Su:
             ting_ji_si_lomaji = si_lomaji(jihanlo[-1])
         return ''.join(buntin)
 
-    def thiam(self, ji):
+    def thiam(self, ji: Ji):
         self._ji.append(ji)
 
     def POJ(self):

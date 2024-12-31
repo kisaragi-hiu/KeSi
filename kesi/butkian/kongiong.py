@@ -71,29 +71,29 @@ KIP_TSOJI = {
 _統一碼羅馬字類 = {'Ll', 'Lu', 'Mn'}
 
 
-def si_lomaji(jiguan):
+def si_lomaji(jiguan: str):
     return 敢是拼音字元(jiguan) or jiguan.isdigit()
 
 
-def 敢是拼音字元(字元):
-    try:
-        種類 = unicodedata.category(字元)
-    except TypeError:
+def 敢是拼音字元(字元: str | None):
+    if 字元 is None:
         return False
+
+    種類 = unicodedata.category(字元)
     return 種類 in _統一碼羅馬字類 or 字元 in ['ⁿ', "'", '_', 'ᴺ', ]
 
 
-def 敢是注音符號(字元):
+def 敢是注音符號(字元: str):
     return unicodedata.name(字元, '').startswith('BOPOMOFO LETTER')
 
 
-def normalize_kautian(taibun):
+def normalize_kautian(taibun: str):
     for ji_kautian, ji_unicode in KIP_TSOJI.items():
         taibun = taibun.replace(ji_kautian, ji_unicode)
     return taibun
 
 
-def normalize_taibun(taibun):
+def normalize_taibun(taibun: str):
     taibun = re.sub(NON_PRINTABLE_CHARS, ' ', taibun)
     taibun = normalize_kautian(taibun)
     taibun = normalize('NFC', taibun)

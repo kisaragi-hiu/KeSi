@@ -3,7 +3,7 @@ from kesi.susia.kongke import thiah, tshiau_tuasiosia, SuSiaTshoNgoo
 from kesi.butkian.kongiong import KHIN_SIANN_HU
 
 
-def tsuanTL(bun):
+def tsuanTL(bun: str):
     si_khinsiann = bun.startswith(KHIN_SIANN_HU)
     if si_khinsiann:
         bun = bun.replace(KHIN_SIANN_HU, '')
@@ -18,20 +18,20 @@ def tsuanTL(bun):
     return kiatko
 
 
-def kapTL(siann, un, tiau):
+def kapTL(siann: str, un: str, tiau: str):
     tiau = tsuan_TL_tiau(tiau)
     un = tau_tiauhu(un, tiau)
     return unicodedata.normalize(
         'NFC', siann + un)
 
 
-def tsuan_TL_tiau(tiau):
+def tsuan_TL_tiau(tiau: str):
     if tiau == '\u0306':
         return '\u030b'
     return tiau
 
 
-def tau_tiauhu(un, tiau):
+def tau_tiauhu(un: str, tiau: str):
     lomaji = ''
     if 'a' in un:
         lomaji = un.replace('a', 'a' + tiau)

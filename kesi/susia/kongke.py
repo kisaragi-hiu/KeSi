@@ -21,7 +21,7 @@ TIAUHO_TIAUHU_PIO = {
 }
 
 
-def khuann_tuasiosia(bun):
+def khuann_tuasiosia(bun: str):
     latin = bun.replace('ⁿ', '')
     if latin.islower():
         return SI_TSUAN_SIOSIA
@@ -31,7 +31,7 @@ def khuann_tuasiosia(bun):
         return SI_TSUAN_TUASIA
 
 
-def tshiau_tuasiosia(tuasiosia, bun):
+def tshiau_tuasiosia(tuasiosia, bun: str):
     if tuasiosia == SI_TSUAN_TUASIA:
         return bun.upper()
     elif tuasiosia == SI_TSUAN_SIOSIA:
@@ -40,7 +40,7 @@ def tshiau_tuasiosia(tuasiosia, bun):
         return bun.capitalize()
 
 
-def thiah(lomaji):
+def thiah(lomaji: str):
     siannun, tiau = theh_sianntiau(lomaji)
 
     siannun_n = thong_n(siannun)
@@ -52,7 +52,7 @@ def thiah(lomaji):
     return siann, un, tiau, tuasiosia
 
 
-def theh_sianntiau(lomaji):
+def theh_sianntiau(lomaji: str):
     nfd = unicodedata.normalize('NFD', lomaji)
     # Guân-té tō sòo-jī-tiāu
     if nfd[-1:] in TIAUHO_TIAUHU_PIO:
@@ -60,21 +60,21 @@ def theh_sianntiau(lomaji):
     # Thuân-thóng-tiāu
     pitui = re.search(
         '\u0301|\u0300|\u0302|\u030c|\u0304|\u030d|\u030b|\u0306', nfd)
-    try:
+    if pitui is None:
+        tiau = '' # 1 or 4
+    else:
         tiau = pitui.group(0)
-    except AttributeError:
-        tiau = ''  # 1 or 4
     siannun = nfd.replace(tiau, '')
     return siannun, tiau
 
 
-def thong_n(siannun):
+def thong_n(siannun: str):
     phinnim = re.sub('([a-z])(N)(h?)', r'\1ⁿ\3', siannun)
     phinnim = phinnim.replace('ᴺ', 'ⁿ')
     return phinnim
 
 
-def tsuan_kongke(siannun):
+def tsuan_kongke(siannun: str):
     kiatko = (
         siannun
         .replace('ch', 'ts')
@@ -90,7 +90,7 @@ def tsuan_kongke(siannun):
     return kiatko
 
 
-def thiah_siannun(無調號音標):
+def thiah_siannun(無調號音標: str):
     for 所在 in range(len(無調號音標)):
         聲母 = 無調號音標[:所在]
         if 聲母.lower() in KONGKE_SIANNBO:

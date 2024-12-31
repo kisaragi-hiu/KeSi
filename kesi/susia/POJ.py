@@ -5,7 +5,7 @@ from kesi.butkian.kongiong import KHIN_SIANN_HU
 from kesi.susia.kongke import thiah, tshiau_tuasiosia, SuSiaTshoNgoo
 
 
-def tsuanPOJ(bun):
+def tsuanPOJ(bun: str):
     si_khinsiann = bun.startswith(KHIN_SIANN_HU)
     if si_khinsiann:
         bun = bun.replace(KHIN_SIANN_HU, '')
@@ -20,7 +20,7 @@ def tsuanPOJ(bun):
     return kiatko
 
 
-def kapPOJ(siann, un, tiau):
+def kapPOJ(siann: str, un: str, tiau: str):
     return unicodedata.normalize(
         'NFC',
         臺羅數字調轉白話字.轉白話字(siann, un, tiau)
@@ -30,7 +30,7 @@ def kapPOJ(siann, un, tiau):
 class 臺羅數字調轉白話字():
 
     @classmethod
-    def 轉白話字(cls, 聲, 韻, 調):
+    def 轉白話字(cls, 聲: str, 韻: str, 調: str):
         白話字聲 = cls.轉白話字聲(聲)
         白話字韻 = cls.轉白話字韻(韻)
         白話字調 = cls.轉白話字調(調)
@@ -41,7 +41,7 @@ class 臺羅數字調轉白話字():
         )
 
     @classmethod
-    def 轉白話字聲(cls, 聲):
+    def 轉白話字聲(cls, 聲: str):
         白話字聲 = None
         if 聲 == 'ts':
             白話字聲 = 'ch'
@@ -52,7 +52,7 @@ class 臺羅數字調轉白話字():
         return 白話字聲
 
     @classmethod
-    def 轉白話字韻(cls, un):
+    def 轉白話字韻(cls, un: str):
         un = (
             un
             .replace('nn', 'ⁿ')
@@ -65,12 +65,12 @@ class 臺羅數字調轉白話字():
         return un
 
     @classmethod
-    def 轉白話字調(cls, tiau):
+    def 轉白話字調(cls, tiau: str):
         # ă a̋
         return tiau.replace('\u030b', '\u0306')
 
     @classmethod
-    def 白話字韻標傳統調(cls, 白話字韻無調, 調):
+    def 白話字韻標傳統調(cls, 白話字韻無調: str, 調: str):
         該標調的字 = ''
         if 'o͘' in 白話字韻無調:
             該標調的字 = 'o͘'
@@ -104,5 +104,5 @@ class 臺羅數字調轉白話字():
         return 結果
 
     @classmethod
-    def 加上白話字調符(cls, 白話字韻無調, 標調字母, 調):
+    def 加上白話字調符(cls, 白話字韻無調: str, 標調字母: str, 調: str):
         return 白話字韻無調.replace(標調字母, 標調字母 + 調, 1)
