@@ -1,5 +1,28 @@
-#+title: sentence
+#+title: Progress
 
+* Common
+
+- [X] normalize_kautian
+  - Inlined into normalize_taibun
+- [X] normalize_taibun
+- [X] si_lomaji jiguan
+- [X] 敢是拼音字元
+- [X] 敢是注音符號
+- [X] _統一碼羅馬字類
+  - Unnecessary as we use regex Unicode property escapes
+- [X] 句中標點符號
+- [X] 斷句標點符號
+- [X] 標點符號
+- [X] 組字式符號
+- [X] 聲調符號
+- [X] HAGFA_TIAU
+- [X] KHIN_SIANN_HU
+- [X] KIP_TSOJI
+- [X] LIAN_JI_HU
+- [X] NGOO_SIU_LE
+- [X] NON_PRINTABLE_CHARS
+
+* Sentence
 - [ ] Ku (class) *class definition*
 - [X] Ku (class) __init__ (def)
 - [ ] Ku (class) __str__ (def)
@@ -7,8 +30,8 @@
 - [ ] Ku (class) __getitem__ (def)
 - [ ] Ku (class) __len__ (def)
 - [ ] Ku (class) __eq__ (def)
-- [ ] Ku (class) _bun_tsuan_sutin (def) :: textToWordArray
-- [ ] Ku (class) _phe_tsuan_sutin (def) :: pheToWordArray
+- [X] Ku (class) _bun_tsuan_sutin (def) :: textToWordArray
+- [X] Ku (class) _phe_tsuan_sutin (def) :: pheToWordArray
 - [ ] Ku (class) hanlo (def)
 - [ ] Ku (class) lomaji (def)
 - [ ] Ku (class) kiphanlo (def)

@@ -146,4 +146,12 @@ class Sentence {
       this.words = pheToTextArray(hanlo_tin, lomaji_tin, khinsiann);
     }
   }
+  hanlo() {
+    const text: string[] = [];
+    let lastWordEndsInLomaji = false;
+    for (const word of this.words) {
+      const wordHanlo = word.hanlo();
+        if (lastWordEndsInLomaji && isLomaji())
+    }
+  }
 }

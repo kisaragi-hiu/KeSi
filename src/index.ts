@@ -5,6 +5,30 @@ import {
   compositionChars,
 } from "./constants";
 
+export function isLomaji(char: string) {
+  return isPiannImChar(char) || isDigit(char);
+}
+
+/**
+ * Return whether `str` contains just digits.
+ */
+function isDigit(str: string) {
+  return !!str.match(/^[0-9]+$/);
+}
+
+export function isBopomofo(char: string) {
+  return !!char.match(/\p{sc=Bopomofo}/u);
+}
+
+// 敢是拼音字元
+export function isPiannImChar(char: string) {
+  if (!char) {
+    return false;
+  }
+  // Ll: 小寫, Lu: 大寫, Mn: 有調號英文
+  return !!char.match(/\p{Ll}|\p{Lu}|\p{Mn}|[ᴺ_'ⁿ]/u);
+}
+
 export function normalizeTaibun(text: string) {
   return (
     text
@@ -209,7 +233,7 @@ class AnalysisState {
     return this.thisWord !== "";
   }
   thisWordIsDigit() {
-    return !!this.thisWord.match(/^[0-9]+$/);
+    return isDigit(this.thisWord);
   }
   toNormalMode() {
     this.mode = "normal";
